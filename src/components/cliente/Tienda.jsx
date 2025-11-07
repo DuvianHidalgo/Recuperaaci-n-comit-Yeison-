@@ -1,3 +1,4 @@
+import React from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 
@@ -10,14 +11,12 @@ export function Tienda() {
     const existe = carrito.find(item => item.id === producto.id);
     
     if (existe) {
-      // Si ya existe, aumento la cantidad
       setCarrito(carrito.map(item =>
         item.id === producto.id
           ? { ...item, cantidad: item.cantidad + 1 }
           : item
       ));
     } else {
-      // Si no existe, lo agrego con cantidad 1
       setCarrito([...carrito, { ...producto, cantidad: 1 }]);
     }
     
@@ -35,15 +34,28 @@ export function Tienda() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {productos.map(producto => (
-            <div key={producto.id} className="bg-gray-800 p-4 rounded-lg hover:bg-gray-750 transition">
+            <div
+              key={producto.id}
+              className="bg-gray-800 p-4 rounded-lg hover:bg-gray-750 transition flex flex-col"
+            >
+              {/* Imagen del producto */}
+              {producto.imagen && (
+                <img
+                  src={producto.imagen}
+                  alt={producto.nombre}
+                  className="w-full h-48 object-cover rounded mb-3"
+                />
+              )}
+
               <h4 className="text-xl font-bold text-white mb-2">{producto.nombre}</h4>
               <p className="text-gray-400 mb-2">{producto.descripcion}</p>
               <p className="text-green-400 font-bold text-2xl mb-2">${producto.precio.toFixed(2)}</p>
               <p className="text-gray-400 mb-4">Disponibles: {producto.stock}</p>
+
               <button
                 onClick={() => agregarAlCarrito(producto)}
                 disabled={producto.stock === 0}
-                className={`w-full px-4 py-3 rounded transition flex items-center justify-center space-x-2 font-semibold ${
+                className={`mt-auto w-full px-4 py-3 rounded transition flex items-center justify-center space-x-2 font-semibold ${
                   producto.stock === 0
                     ? 'bg-gray-600 cursor-not-allowed text-gray-400'
                     : 'bg-blue-600 hover:bg-blue-700 text-white'

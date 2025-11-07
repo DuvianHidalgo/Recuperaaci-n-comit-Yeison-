@@ -1,3 +1,4 @@
+import React from 'react';
 import { Plus, Minus, Trash2 } from 'lucide-react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useAuth } from '../../context/AuthContext';
@@ -36,13 +37,12 @@ export function Carrito() {
       return;
     }
 
-    // Creo el pedido con toda la información
     const nuevoPedido = {
       id: Date.now(),
       clienteId: user.id,
       clienteNombre: user.nombre,
       productos: carrito,
-      total: total,
+      total,
       fecha: new Date().toLocaleString('es-ES')
     };
 
@@ -65,19 +65,34 @@ export function Carrito() {
           {/* Lista de productos en el carrito */}
           <div className="space-y-4 mb-6">
             {carrito.map(item => (
-              <div key={item.id} className="bg-gray-800 p-4 rounded-lg flex justify-between items-center">
+              <div
+                key={item.id}
+                className="bg-gray-800 p-4 rounded-lg flex items-center space-x-4"
+              >
+                {/* Imagen del producto */}
+                {item.imagen && (
+                  <img
+                    src={item.imagen}
+                    alt={item.nombre}
+                    className="w-20 h-20 object-cover rounded"
+                  />
+                )}
+
+                {/* Detalle del producto */}
                 <div className="flex-1">
                   <h4 className="text-xl font-bold text-white">{item.nombre}</h4>
                   <p className="text-gray-400">${item.precio.toFixed(2)} c/u</p>
                 </div>
-                <div className="flex items-center space-x-4">
+
+                {/* Controles */}
+                <div className="flex items-center space-x-3">
                   <button
                     onClick={() => disminuirCantidad(item.id)}
                     className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded transition"
                   >
                     <Minus size={18} />
                   </button>
-                  <span className="text-white font-bold text-xl min-w-12 text-center">
+                  <span className="text-white font-bold text-lg min-w-10 text-center">
                     {item.cantidad}
                   </span>
                   <button
@@ -99,8 +114,8 @@ export function Carrito() {
               </div>
             ))}
           </div>
-          
-          {/* Resumen y botón de compra */}
+
+          {/* Total */}
           <div className="bg-gray-800 p-6 rounded-lg">
             <div className="flex justify-between items-center mb-6">
               <span className="text-2xl font-bold text-white">Total:</span>
